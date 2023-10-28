@@ -1,0 +1,47 @@
+[
+     {
+          "id": 1,
+          "title": "fuente",
+          "description": "fuente pc",
+          "price": 32,
+          "thumbnail": "thumb",
+          "code": "ajsdfg33qw",
+          "stock": 56
+     },
+     {
+          "id": 2,
+          "title": "monitor",
+          "description": "monitor pc",
+          "price": 60,
+          "thumbnail": "thumbnail/src",
+          "code": "sdfghh555",
+          "stock": 30
+     },
+     {
+          "id": 3,
+          "title": "speaker",
+          "description": "parlante pc",
+          "price": 60,
+          "thumbnail": "thumbnail/src",
+          "code": "546456",
+          "stock": 56
+     },
+     {
+          "id": 5,
+          "title": "GPU",
+          "description": "GPU pc",
+          "price": 90,
+          "thumbnail": "thumbnail/src",
+          "code": "g8s1b1b",
+          "stock": 1
+     },
+     {
+          "id": 6,
+          "title": "notebook",
+          "description": "notebook",
+          "price": 13,
+          "thumbnail": "thumb",
+          "code": "klsdafj1123",
+          "stock": 10
+     }
+]
