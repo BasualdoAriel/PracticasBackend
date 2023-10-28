@@ -15,11 +15,12 @@ app.use(express.urlencoded({extended:true}))
 
 app.get('/products',async (req,res)=>{
     let products= await productManager.getProducts()
-    if(req.query.limit){
+
+    if(req.query.limit>0 && !isNaN(req.query.limit)){
         products=products.slice(0,req.query.limit)
     }
     res.setHeader('Content-Type','application/json')
-    res.status(200).json({filtros:req.query,products})
+    res.status(200).json({filters:req.query,products})
 })
 
 app.get('/products/:id',async(req, res)=>{
