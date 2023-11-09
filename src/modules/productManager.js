@@ -1,8 +1,4 @@
 const fs=require('fs')
-
-
-
-
 class ProductManager{
 
     constructor(path){
@@ -28,11 +24,10 @@ class ProductManager{
 existe un producto con el mismo código: ${product.code} o alguno de los campos no está completo` )
             return
         }
+        this.id=products[products.length-1].id
         let productId=this.id
-        product.id=productId
-        this.id++
+        product.id=productId+1
         products.push(product)
-        console.log(products)
         fs.promises.writeFile(this.path,JSON.stringify(products,null,5))
     }
 
@@ -48,13 +43,15 @@ existe un producto con el mismo código: ${product.code} o alguno de los campos 
 
     async updateProduct(id,productUpdated){//actualiza el producto asociadio al id que recibe por parametro y vuelve a guardar el archivo.
         let read=JSON.parse(await fs.promises.readFile(this.path,"utf-8")) //obtengo array de objetos desde archivo.
-        let product= read.find(p=>(p.id===id))//obtengo objeto desde el array anterior.
+        let product= read.find(p=>(p.id===id))
+
         if(product){
-            let auxId=product.id
-            read[id]=productUpdated
-            read[id].id=auxId
+            let auxId=product.id//guardo id del producto
+            let idPrduct=read.map(product=>product.id).indexOf(id)
+            read[idPrduct]=productUpdated//sobreescribo el prducto
+            read[idPrduct].id=auxId//asingo el id guardado al prducto actualizado.
             fs.unlinkSync(this.path)
-            fs.promises.writeFileSync(this.path,JSON.stringify(read,null,5))
+            fs.promises.writeFile(this.path,JSON.stringify(read,null,5))
             console.log('Archivo actuailizado.')
             return           
 
@@ -68,15 +65,15 @@ existe un producto con el mismo código: ${product.code} o alguno de los campos 
         let read=JSON.parse(await fs.promises.readFile(this.path,"utf-8"))
         let exist= read.find(p=>(p.id===id))
         if(exist){
-            read.splice(id,1)
+            let idPrduct=read.map(product=>product.id).indexOf(id) //mapeo productos por id y luego busco el indice correspondiente al id.
+            read.splice(idPrduct,1) //me posiciono sobre los productos y elimino en la posición de idProduct.
             fs.unlinkSync(this.path)
-            fs.promises.writeFileSync(this.path,JSON.stringify(read,null,5))
+            fs.promises.writeFile(this.path,JSON.stringify(read,null,5))
         }else{
             console.log('No existe producto con ese id')
             return
         }
     }
-
 }
 
 module.exports=ProductManager

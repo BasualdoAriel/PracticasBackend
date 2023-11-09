@@ -3,45 +3,77 @@
           "id": 1,
           "title": "fuente",
           "description": "fuente pc",
-          "price": 32,
-          "thumbnail": "thumb",
           "code": "ajsdfg33qw",
-          "stock": 56
+          "price": 82,
+          "status": true,
+          "stock": 56,
+          "category": "pc",
+          "thumbnail": "thumb"
      },
      {
           "id": 2,
           "title": "monitor",
           "description": "monitor pc",
-          "price": 60,
-          "thumbnail": "thumbnail/src",
           "code": "sdfghh555",
-          "stock": 30
+          "price": 60,
+          "status": true,
+          "stock": 30,
+          "category": "pc",
+          "thumbnail": "thumbnail/src"
      },
      {
           "id": 3,
           "title": "speaker",
           "description": "parlante pc",
-          "price": 60,
-          "thumbnail": "thumbnail/src",
           "code": "546456",
-          "stock": 56
+          "price": 60,
+          "status": true,
+          "stock": 56,
+          "category": "pc",
+          "thumbnail": "thumbnail/src"
      },
      {
           "id": 5,
           "title": "GPU",
           "description": "GPU pc",
-          "price": 90,
-          "thumbnail": "thumbnail/src",
           "code": "g8s1b1b",
-          "stock": 1
+          "price": 90,
+          "status": true,
+          "stock": 1,
+          "category": "pc",
+          "thumbnail": "thumbnail/src"
      },
      {
           "id": 6,
           "title": "notebook",
           "description": "notebook",
-          "price": 13,
-          "thumbnail": "thumb",
           "code": "klsdafj1123",
-          "stock": 10
+          "price": 13,
+          "status": true,
+          "stock": 10,
+          "category": "pc",
+          "thumbnail": "thumb"
+     },
+     {
+          "id": 7,
+          "title": "teclado",
+          "description": "teclado pc",
+          "code": "asdf54hg6",
+          "price": 25,
+          "status": true,
+          "stock": 45,
+          "category": "pc",
+          "thumbnail": "thumb"
+     },
+     {
+          "id": 8,
+          "title": "mouse",
+          "description": "mouse pc",
+          "code": "lkohgklor56",
+          "price": 25,
+          "status": false,
+          "stock": 30,
+          "category": "pc",
+          "thumbnail": "thumb"
      }
 ]
