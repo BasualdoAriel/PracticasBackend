@@ -1,0 +1,26 @@
+<h2>Prductos</h2>
+<hr>
+
+<h3>Agregar productos</h3>
+
+<form>
+    <label for="title">nombre:</label>
+    <input type="text" id="title">
+    <label for="description">descripcion: </label>
+    <input type="text" id="description">
+    <label for="price">Precio:</label>
+    <input type="text" id="precio">
+</form>
+<button id="add">Enviar</button>
+<button id="delete">Eliminar ultimo.</button>
+
+{{#if products}}
+    <ul id="listaUp">
+        {{#each products}}
+            <li>{{this.title}}</li>
+        {{/each}}
+    </ul>
+{{/if}}
+
+<script src="socket.io/socket.io.js"></script>
+<script src="js/ws.js"></script>
