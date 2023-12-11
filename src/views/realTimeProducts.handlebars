@@ -3,15 +3,17 @@
 
 <h3>Agregar productos</h3>
 
-<form>
-    <label for="title">nombre:</label>
-    <input type="text" id="title">
-    <label for="description">descripcion: </label>
-    <input type="text" id="description">
-    <label for="price">Precio:</label>
-    <input type="text" id="precio">
+<form id="productForm">
+    <input type="text" placeholder="Ingrese el nombre del producto" id="title" name="productName" required>
+    <input type="text" placeholder="Ingrse descripcion" id="description" name="description" required>
+    <input type="text" placeholder="code" id="code" name="code" required>
+    <input type="number" placeholder="Precio" id="price" name="price" required>
+    <input type="number" placeholder="Stock" id="stock" name="stock" required>
+    <input type="text" placeholder="categoria" id="category" name="category" required>
+    <input type="text" name="thumbnail" id="thumbnail" placeholder="thumbnail" required>
 </form>
-<button id="add">Enviar</button>
+
+<button id="submit">Add Product</button>
 <button id="delete">Eliminar ultimo.</button>
 
 {{#if products}}

@@ -2,23 +2,11 @@ const express=require('express')
 const path=require('path')
 const {engine}=require('express-handlebars')
 const {Server}=require('socket.io')
-
-//Importo los routers
-const deleteProduct=require('./routes/products/deleteProduct.js')
-const addProduct=require('./routes/products/addProducts.js')
-const updateProduct=require('./routes/products/updateProduct.js')
-const getProducts=require('./routes/products/getProducts.js')
-const getProductById=require('./routes/products/getProductById.js')
-const getCarts=require('./routes/carts/getCarts.js')
-const getCartById=require('./routes/carts/getCartById.js')
-const addCart=require('./routes/carts/addCart.js')
-const addProductToCart=require('./routes/products/addProductToCart.js')
+const mongoose=require('mongoose')
+const chatManager=require('./dao/chatManager.js')
 
 //VISTAS
 const vistasProduct=require('./routes/vistasProduct.js')
-
-
-
 
 const PORT=3000
 
@@ -32,20 +20,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
 
-
-//UNIFICAR
-app.use('/products',getProducts)
-app.use('/products',getProductById)
-app.use('/products',deleteProduct)
-app.use('/products',addProduct)
-app.use('/products',updateProduct)
-app.use('/carts',getCarts)
-app.use('/carts',getCartById)
-app.use('/carts',addCart)
-app.use('/carts',addProductToCart)
-
-
-
 app.use('/',vistasProduct)
 
 
@@ -57,11 +31,26 @@ const server=app.listen(PORT,()=>{
 const serverSokcet=new Server(server)
 
 
+
 serverSokcet.on("connection",socket=>{
-    console.log('Socker on, id: '+socket.id );
+    console.log('Socket on, id: '+socket.id );
+    
+    // socket.on("productsUpdate",products=>{
+    //     serverSokcet.emit("productsUpdate",datos)
+    // })
 
-    socket.on("productsUpdate",products=>{
-        serverSokcet.emit("productsUpdate",datos)
+    
+
+    socket.on('mensaje', datos=>{
+        chatManager(datos)
+        serverSokcet.emit('nuevoMensaje', datos)
     })
-
 })
+
+
+try {
+     mongoose.connect('mongodb+srv://ArielBasualdo:SkHlBzll3xkLec6u@practicabackend.ezsytku.mongodb.net/?retryWrites=true&w=majority',{dbName:'ecommerce'})
+    console.log('DB ONLINE')
+} catch (error) {
+    console.log(error.message)
+}

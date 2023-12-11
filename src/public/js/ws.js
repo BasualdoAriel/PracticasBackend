@@ -1,13 +1,11 @@
 const socket=io()
 
-let listaUp=document.getElementById('listaUp')
-let update=document.getElementById('add')
-let deleteLast= document.getElementById('delete')
+const listaUp=document.getElementById('listaUp')
+const submitButton=document.getElementById('submit')
+const deleteLast=document.getElementById('delete')
 let contador=0
 
-console.log(update)
-
-update.addEventListener("click",()=>{
+submitButton.addEventListener("click",()=>{
     contador=contador+1
     let product=document.createElement("li")
     product.setAttribute("id",`added${contador}`)

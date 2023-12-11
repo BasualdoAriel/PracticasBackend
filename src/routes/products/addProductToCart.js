@@ -1,12 +1,13 @@
 const {Router}=require('express')
 const router=Router()
-const CartManager=require('../../modules/cartsManager.js')
+const CartManager=require('../../dao/cartsManager.js')
 const cartManager= new CartManager('./Carts/carts.json')
+
 
 router.post('/product/:id', async(req,res)=>{
     let id=parseInt(req.params.id)
     let product=req.body
-    let exist= await cartManager.getCartbyId(id)
+    let exist= await cartManager.getCartById(id)
     if(exist===undefined){
         res.setHeader('Content-Type','application/json')
         return res.status(400).json('errr')

@@ -1,12 +1,14 @@
 const {Router}=require('express')
 const router=Router()
-const ProductManager=require('../../modules/productManager.js')
-const productManager=new ProductManager('./ProductManager/productos.json')
+//const ProductManager=require('../../modules/productManagerFS.js')
+//const productManager=new ProductManager('./ProductManager/productos.json')
+
+const productModel=require('../../dao/models/products.model.js')
 
 
 router.get('/:id',async(req, res)=>{ //Utilizo getProductById para buscar el producto.
     let id=parseInt(req.params.id)
-    let product= await productManager.getProductById(id)
+    let product= await productModel.find({id:id})
     if(product){
         res.setHeader('Content-Type','application/json')
         res.send(product)

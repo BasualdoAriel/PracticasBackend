@@ -1,5 +1,5 @@
-const fs=require('fs')
-
+//const fs=require('fs')
+const cartModel=require('./models/carts.model.js')
 class CartManager{
 
     constructor(path){
@@ -8,6 +8,73 @@ class CartManager{
     }
 
     async getCarts(){
+        let carts=[]
+        try {
+            carts=await cartModel.find({})
+        } catch (error) {
+            console.log(error.message)
+        }
+        return carts
+    }
+
+
+    async getCartById(id){
+        let cart=await cartModel.find({id:id})
+        if(!cart){
+            console.error('No exiset carrito con id')
+            return
+        }
+        return cart
+    }
+
+    async addCart(products){
+        let id= await cartModel.find().sort({$natural:-1}).limit(1).lean()
+        id=id[0].id+1
+        cartModel.insert
+        let cart={
+            id:id,
+            products:products
+        }
+        return cart
+        //await productModel.create(product.product)
+    }
+
+    async addProductToCart(product,id){
+        let cart=await this.getCartById(id)
+        if(cart.length!==0){
+            let productsOnCart=cart[0].products//guardo los productos del carrito existente.
+            let productId=product[0].product//guardo el id del producto a agregar.
+            let productQuantity=product[0].quantity//guardo la cantidad del produco a agregar.
+            let existe=productsOnCart.find(producto=>producto.product===productId)??-1//busco si existe el producto, si no existe devuelvo -1
+            productsOnCart.forEach(async(product)=>{
+                //BUSCO EL PRODUCTO EN EL CARRITO Y SI EXISTE ACTUALIZO LA CANTIDAD
+                if(product.product===productId){
+                    product.quantity=product.quantity+productQuantity//sumo las cantidades
+                    await cartModel.updateOne({id:id},{$set:{//actualizo el producto.
+                    id:id,
+                    products:productsOnCart
+                        }})
+                }
+            })
+            if(existe===-1){//Si no existe el producto en el carrito, lo agrego.
+                productsOnCart.push(product[0])
+                await cartModel.updateOne({id:id},{$set:{
+                    id:id,
+                    products:productsOnCart
+                       }})
+                    return
+                }else{
+                    console.log('Carrio actualizado en FE');
+                    return
+                }
+            }else{
+                console.log(`No existe carrito con id ${id}`);
+                return
+            }    
+    }
+
+
+    /*async getCarts(){
         if(fs.existsSync(this.path)){
             let carts=JSON.parse(await fs.promises.readFile(this.path,"utf-8"))
             return carts
@@ -94,7 +161,11 @@ class CartManager{
                 return
             }
         }
-    }
+    }*/
 }
+
+
+
+
 
 module.exports=CartManager
