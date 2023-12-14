@@ -1,4 +1,4 @@
-const messageModel=require('./models/messages.model')
+const messageModel=require('../models/messages.model')
 
 
 const verificarUsuario=async(user)=>{

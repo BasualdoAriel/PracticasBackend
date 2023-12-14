@@ -1,0 +1,12 @@
+<h2>Prductos</h2>
+<hr>
+
+<p>Debo recibir como parametro el price(1 para valor ascendete,-1 para valor descendente) y available(true/false)</p>
+{{#if products}}
+    <ul>
+        {{#each products}}
+            <li><strong>{{this.title}}|</strong> Valor: <strong>${{this.price}}|</strong> Categoria: <strong>{{this.category}}</strong></li>
+        {{/each}}
+    </ul>
+{{/if}}
+<br>

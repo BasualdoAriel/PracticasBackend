@@ -14,8 +14,74 @@ const addProductToCart=require('./products/addProductToCart.js')
 
 
 router.get('/home',async(req,res)=>{
-    let products= await productModel.find().lean()//convierte a json el objeto traido por mongoose
-    res.status(200).render('home',{titulo:'HomePage',products})
+    let page=1
+    let category
+    let products
+    if(req.query.page){
+        page=parseInt(req.query.page)
+    }
+    if(req.query.category){
+        category=req.query.category
+        try {
+            products= await productModel.paginate({category:category},{lean:true, limit:5, page:page})   
+        } catch (error) {
+            products=[]
+        }
+    }else{
+        try {
+            products= await productModel.paginate({},{lean:true, limit:15, page:page})    
+        } catch (error) {
+            console.log(error)
+            products=[]
+        }
+    }
+    let {totalPages,hasNextPage,hasPrevPage,prevPage,nextPage}=products
+    if(page>totalPages || isNaN(page)){
+        res.status(400).json('Pagina inexisente')
+    }else{
+        res.status(200).render('home',{titulo:'HomePage',products:products.docs,totalPages,hasNextPage,hasPrevPage,prevPage,nextPage,category})
+    }
+})
+
+router.get('/prices', async(req,res)=>{
+    let products
+    let price
+    let available
+    if(req.query.price==1||req.query.price==-1){
+        price=parseInt(req.query.price)
+        if(req.query.available==undefined){
+            products= await productModel.aggregate(
+                [
+                    {
+                        $sort:{price:price, _id:1}
+                    }
+                ]
+            )
+        }else{
+            if(req.query.available=='true' || req.query.available=='false'){
+                if(req.query.available=='true'){
+                    available=true
+                }else{
+                    available=false
+                }
+                products= await productModel.aggregate(
+                    [
+                        {
+                            $match:{status:available}
+                        },
+                        {
+                            $sort:{price:price, _id:1}
+                        }
+                    ]
+                )
+            }else{
+                res.status(400).json('Alguna de las query no es correcta.')    
+            }
+        }
+    }else{
+        products=[]
+    }
+    res.status(200).render('prices',{titulo:'HomePage',products})
 })
 
 

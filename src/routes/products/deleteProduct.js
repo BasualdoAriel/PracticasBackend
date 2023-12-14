@@ -1,13 +1,10 @@
 const {Router}=require('express')
 const router=Router()
-// const ProductManager=require('../../modules/productManagerFS.js')
-// const productManager=new ProductManager('./ProductManager/productos.json')
 const productModel=require('../../dao/models/products.model.js')
 
 router.delete('/:id', async(req,res)=>{
     let id=parseInt(req.params.id)
     let product= await productModel.find({id:id})
-    console.log(product)
     if(product.length===0){//si es igual a 0 no existe prducto con ese id.        
         res.setHeader('Content-Type','applicattion/json')
         return res.status(400).json({message:`id invalido: ${id}`})

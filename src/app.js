@@ -3,7 +3,7 @@ const path=require('path')
 const {engine}=require('express-handlebars')
 const {Server}=require('socket.io')
 const mongoose=require('mongoose')
-const chatManager=require('./dao/chatManager.js')
+const chatManager=require('./dao/managers/chatManager.js')
 
 //VISTAS
 const vistasProduct=require('./routes/vistasProduct.js')

@@ -1,10 +1,50 @@
 <h2>Prductos</h2>
 <hr>
 
+
+
+
 {{#if products}}
     <ul>
         {{#each products}}
-            <li>{{this.title}}</li>
+            <li><strong>{{this.title}}|</strong> Valor: <strong>${{this.price}}|</strong> Categoria: <strong>{{this.category}}</strong></li>
         {{/each}}
     </ul>
 {{/if}}
+<br>
+
+{{#if category}}
+    <a href="/home?page=1&category={{category}}">Primera página</a>
+    {{#if hasPrevPage}}
+        <a href="/home?page={{prevPage}}&category={{category}}">Página anetrior</a>
+    {{else}}
+        <span>Página anterior</span>
+    {{/if}}
+
+    {{#if hasNextPage}}
+        <a href="/home?page={{nextPage}}&category={{category}}">Página siguiente</a>
+    {{else}}
+        <span>Página siguente</span>
+    {{/if}}
+
+    <a href="/home?page={{totalPages}}&category={{category}}">Última página</a>
+{{else}}
+    <a href="/home?page=1">Primera página</a>
+    {{#if hasPrevPage}}
+        <a href="/home?page={{prevPage}}">Página anetrior</a>
+    {{else}}
+        <span>Página anterior</span>
+    {{/if}}
+
+    {{#if hasNextPage}}
+        <a href="/home?page={{nextPage}}">Página siguiente</a>
+    {{else}}
+        <span>Página siguente</span>
+    {{/if}}
+
+    <a href="/home?page={{totalPages}}">Última página</a>
+{{/if}}
+
+
+<button><a href="/home?page=1">Resetear Filtro</a></button>
+

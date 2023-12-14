@@ -1,4 +1,4 @@
-const productModel=require('./models/products.model.js')
+const productModel=require('../models/products.model.js')
 
 class Product{
     constructor(){

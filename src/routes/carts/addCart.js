@@ -1,8 +1,8 @@
 const {Router}=require('express')
 const cartModel = require('../../dao/models/carts.model')
 const router=Router()
- const CartManager=require('../../dao/cartsManager.js')
- const cartManager= new CartManager('./Carts/carts.json')
+const CartManager=require('../../dao/managers/cartsManager.js')
+const cartManager= new CartManager('./Carts/carts.json')
 
 
 //AGREGA EL PRIMER PRODUCTO Y CREA EL CARRITO.

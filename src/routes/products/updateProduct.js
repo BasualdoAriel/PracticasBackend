@@ -1,8 +1,6 @@
 const {Router}=require('express')
 const router=Router()
-const Product=require('../../dao/product')
-// const ProductManager=require('../../modules/productManagerFS.js')
-// const productManager=new ProductManager('./ProductManager/productos.json')
+const Product=require('../../dao/managers/product.js')
 
 
 router.put('/:id', async(req,res)=>{

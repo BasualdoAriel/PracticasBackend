@@ -1,6 +1,6 @@
 const socket=io()
 
-let validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+//let validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
 let inputMensaje=document.getElementById('mensaje')
 let divMensajes=document.getElementById('mensajes')
 
@@ -11,7 +11,6 @@ Swal.fire({
     inputPlaceholder:"ejemplo@ejemplo.com",
     allowOutsideClick:false
 }).then(resultado=>{
-    console.log(resultado)
     socket.emit('id', resultado.value)
     inputMensaje.focus()
     document.title=resultado.value

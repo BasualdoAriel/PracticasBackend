@@ -1,6 +1,6 @@
 const {Router}=require('express')
 const router=Router()
-const Product=require('../../dao/product')
+const Product=require('../../dao/managers/product.js')
 // const ProductManager=require('../../modules/productManagerFS.js')
 // const productManager=new ProductManager('./ProductManager/productos.json')
 const productModel=require('../../dao/models/products.model.js')
