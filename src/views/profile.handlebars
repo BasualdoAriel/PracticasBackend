@@ -1,0 +1,7 @@
+<h2>Perfil {{user.name}}</h2>
+<hr>
+<p>Nombre: {{user.name}} -  Correo Electrónico: <strong>{{user.email}}</strong></p>
+{{#if admin}}
+    <br>
+    <p>ROL: <strong>{{user.role}}</strong></p>
+{{/if}}

@@ -1,0 +1,16 @@
+<h2>Registro:</h2>
+<hr>
+<form action="/sessions/register" method="post">
+
+    {{#if error}}
+        <div style="color: red;">{{error}}</div>
+    {{/if}}
+
+    <input type="text" name="name" placeholder="nombre">
+    <input type="email" name="email" placeholder="email">
+    <input type="password" name="password" placeholder="password">
+    <input type="password" name="validPassword" placeholder="Repetir password">
+    <br>
+    <input type="submit" value="Registrar">
+</form>
+
