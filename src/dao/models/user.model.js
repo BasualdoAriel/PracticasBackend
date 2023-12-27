@@ -15,6 +15,7 @@ const usersEsquema=new mongoose.Schema(
         }
     },
     {
+        strict:false,
         timestamps: {
             updatedAt: "FechaUltMod", createdAt: "FechaAlta"
         }

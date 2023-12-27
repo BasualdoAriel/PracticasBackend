@@ -20,6 +20,13 @@ const auth=(req,res,next)=>{
     next()
 }
 
+const auth2=(req,res,next)=>{
+    if(req.session.user){
+        return res.redirect('/profile')
+    }
+    next()
+}
+
 
 router.get('/home',auth,async (req,res)=>{
     let user=req.session.user
@@ -103,14 +110,14 @@ router.get('/chat',async(req,res)=>{
     res.status(200).render('chat',{})
 })
 
-router.get('/login',(req,res)=>{
+router.get('/login',auth2,(req,res)=>{
     let {error,mensaje}=req.query//recibo mensajes o errores.
  
     res.setHeader('Content-Type','text/html')
     res.status(200).render('login',{error,mensaje})
 })
 
-router.get('/register',(req,res)=>{
+router.get('/register',auth2,(req,res)=>{
     let {error}=req.query //recibo error
     res.setHeader('Content-Type','text/html')
     res.status(200).render('registro',{error})

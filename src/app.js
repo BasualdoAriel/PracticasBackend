@@ -6,6 +6,8 @@ const mongoose=require('mongoose')
 const chatManager=require('./dao/managers/chatManager.js')
 const sessions=require('express-session')
 const mongoStore=require('connect-mongo')
+const initPassport=require('./config/config.passport.js')
+const passport=require('passport')
 
 
 //VISTAS
@@ -36,7 +38,9 @@ app.use(sessions(
         )
     }
 ))
-
+initPassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/',vistasProduct)
 app.use('/sessions',vistasSession)
