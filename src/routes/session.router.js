@@ -3,7 +3,6 @@ const {Router}=require('express')
 // const crypto = require('../crypto.js') //importo implementación de bcrypt
 const router=Router()
 const passport=require('passport')
-const { json } = require('body-parser')
 
 router.get('/ErrorLogin',(req,res)=>{
     return res.redirect(`/login?error=acceso incorrecto`)
@@ -43,10 +42,15 @@ router.get('/github',passport.authenticate('github',{}),(req,res)=>{
 })
 
 router.get('/callbackGithub',passport.authenticate('github',{failureRedirect:'/sessions/ErrorGithub'}), (req,res)=>{
-    res.status(200).json({
-        message: 'Acceso correcto: ', usuario:req.user._json.email
-    })
+    // res.status(200).json({
+    //     message: 'Acceso correcto: ', usuario:req.user._json.email
+    // })
+    req.session.user={//creo el usuario 
+        name:req.user.name, email:req.user.email, role:req.user.role
+    }
+    return res.redirect('/home')
 })
+
 router.get('/ErrorGithub', (req,res)=>{
     return res.redirect(`/login?error=Login con GitHub erroneo`)
 })
