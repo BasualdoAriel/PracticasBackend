@@ -27,7 +27,6 @@ const auth2=(req,res,next)=>{
     next()
 }
 
-
 router.get('/home',auth,async (req,res)=>{
     let user=req.session.user
     let page=1
@@ -124,7 +123,13 @@ router.get('/register',auth2,(req,res)=>{
 })
 
 router.get('/profile', auth,(req,res)=>{
-    let user=req.session.user //recibo usuario
+    let user={
+        first_name:req.session.user.first_name,
+        last_name:req.session.user.last_name,
+        email:req.session.user.email,
+        age:req.session.user.age,
+        cart:req.session.user.cart
+    }
     if(user.role==="admin"){//si el rol es admin, muesro la info en /profile.
         let admin=true
         res.setHeader('Content-Type','text/html')

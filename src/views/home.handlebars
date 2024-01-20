@@ -1,7 +1,7 @@
-<h2>Prductos</h2>
+<h2>Productos</h2>
 <hr>
 
-<h3>Iniciaste sesión como: {{user.name}}</h3>
+<h3>Iniciaste sesión como: {{user.email}}</h3>
 
 {{#if products}}
     <ul>
@@ -15,7 +15,7 @@
 {{#if category}}
     <a href="/home?page=1&category={{category}}">Primera página</a>
     {{#if hasPrevPage}}
-        <a href="/home?page={{prevPage}}&category={{category}}">Página anetrior</a>
+        <a href="/home?page={{prevPage}}&category={{category}}">Página anterior</a>
     {{else}}
         <span>Página anterior</span>
     {{/if}}
@@ -30,7 +30,7 @@
 {{else}}
     <a href="/home?page=1">Primera página</a>
     {{#if hasPrevPage}}
-        <a href="/home?page={{prevPage}}">Página anetrior</a>
+        <a href="/home?page={{prevPage}}">Página anterior</a>
     {{else}}
         <span>Página anterior</span>
     {{/if}}

@@ -1,6 +1,10 @@
-<h2>Perfil {{user.name}}</h2>
+<h2>Perfil {{user.first_name}}</h2>
 <hr>
-<p>Nombre: {{user.name}} -  Correo Electrónico: <strong>{{user.email}}</strong></p>
+<p>Nombre: <strong>{{user.first_name}}</strong><br>Apellido: <strong>{{user.last_name}}</strong><br>Correo Electrónico: <strong>{{user.email}}</strong></p>
+<br>
+
+<p>carrito con id: <strong>{{user.cart}}</strong></p>
+
 {{#if admin}}
     <br>
     <p>ROL: <strong>{{user.role}}</strong></p>

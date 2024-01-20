@@ -28,6 +28,9 @@ app.use(sessions(
     {
         secret:"ArielBasualdo",
         resave:true,saveUninitialized:true,
+        cookie:{
+            expires:600000
+        },
         store:mongoStore.create(
             {
                 mongoUrl:'mongodb+srv://ArielBasualdo:SkHlBzll3xkLec6u@practicabackend.ezsytku.mongodb.net/?retryWrites=true&w=majority',

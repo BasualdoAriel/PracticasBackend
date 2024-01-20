@@ -6,6 +6,7 @@ const ProductManager = require('../../dao/managers/productManager.js')
 const productManager= new ProductManager()
 
 router.post('/:cId/product/:pId', async(req,res)=>{
+    console.log('enro');
     let pId=parseInt(req.params.pId)
     let cId=parseInt(req.params.cId)
     let product= await productManager.getProductById(pId)

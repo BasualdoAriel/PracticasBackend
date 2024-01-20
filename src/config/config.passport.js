@@ -4,53 +4,43 @@ const github=require('passport-github2')
 const usersModel = require('../dao/models/user.model.js')
 const crypto=require('../crypto.js')
 
+
 const initPassport=()=>{
-    passport.use('register',new local.Strategy(
+    passport.use('register',new local.Strategy( //Registro de usuario
         {
             passReqToCallback:true, usernameField:'email'
 
         },
         async(req, username,password,done)=>{
             try {
-                let {name,email}=req.body
-
-                if(!name||!email||!password){
-                    //return res.redirect('/register?error=Completá todos los campos!')
+                let {first_name,last_name,email,age}=req.body
+                if(!first_name||!last_name||!email||!password||!age){
                     return done(null, false)
                 }
-            
                 let regMail=/^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/
                 console.log(regMail.test(email))
                 if(!regMail.test(email)){
-                    //return res.redirect('/register?error=Mail con formato incorrecto...!!!')
                     return done(null, false)
                 }
-            
                 let exist=await usersModel.findOne({email})
                 if(exist){
-                    //return res.redirect(`/register?error=Email: ${email} ya está regisrado.`)
                     return done(null, false)
                 }
-            
-                //password=crypto.createHmac('sha256','ArielBasualdo').update(password).digest('hex')
                 password=crypto.crearHash(password)
                 let user
-            
                 try {
-                    user=await usersModel.create({name,email,password})
-                    //return res.redirect(`/login?mensaje=Email ${email} regisrtado correctamente.`)
+                    user=await usersModel.create({first_name,last_name,email,age,password,cart:'65a83e9700bd74cc3eed6556'})//asigno un carrito vacio para el registro
                     return done(null, user)
                 } catch (error) {
-                    //return res.redirect('/register?error=error inespesrado. Reintente')
                     return done(null, false)
                 }
             } catch (error) {
                 return done(error)
             }
         }
-        ))
+    ))
 
-    passport.use('login', new local.Strategy(
+    passport.use('login', new local.Strategy(//login con email y password
         {
             usernameField:'email'
         },
@@ -60,6 +50,8 @@ const initPassport=()=>{
                     return done(null, false)
                 }
                 let user=await usersModel.findOne({email:username}).lean()//busco si existe el usuario
+                console.log('User passport:')
+                console.log(user)
                 if(!user){//si no existe, solicito nuevamene datos.
                     return done(null, false)
                 }
@@ -67,6 +59,7 @@ const initPassport=()=>{
                     return done(null, false)
                 }
                 delete user.password
+                console.log(user)
                 return done(null, user)
             } catch (error) {
                 return done(error, null)
@@ -74,7 +67,7 @@ const initPassport=()=>{
         }
     ))
     
-    passport.use('github', new github.Strategy(
+    passport.use('github', new github.Strategy(//registro e inicio de sesión con github
         {
             clientID:'Iv1.7ae6a07789335af4',
             clientSecret:'04f0efd87cef5017eb557b490d65e83d8dabb6b5',
@@ -84,8 +77,12 @@ const initPassport=()=>{
             try {
                 let user=await usersModel.findOne({email:profile._json.email})
                 if(!user){
+                    let name=profile._json.name.split(" ")
+                    let first_name=name[0]
+                    let last_name=name[1]
                     let newUser={
-                        name:profile._json.name,
+                        first_name,
+                        last_name,                        
                         email: profile._json.email,
                         profile
                     }
@@ -98,16 +95,16 @@ const initPassport=()=>{
             }
         }
     ))
-        //config serializador
+    
+    //config serializador
+    passport.serializeUser((user,done)=>{
+        return done(null, user._id)
+    })
 
-        passport.serializeUser((user,done)=>{
-            return done(null, user._id)
-        })
-
-        passport.deserializeUser(async(id,done)=>{
-            let user=await usersModel.findById(id)
-            done(null, user)
-        })
+    passport.deserializeUser(async(id,done)=>{
+        let user=await usersModel.findById(id)
+        done(null, user)
+    })
 
 }//fin initpassport
 
