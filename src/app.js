@@ -9,12 +9,14 @@ const mongoStore=require('connect-mongo')
 const initPassport=require('./config/config.passport.js')
 const passport=require('passport')
 
+//Config de servidor
+const config=require('./config/config.js')
 
 //VISTAS
 const vistasProduct=require('./routes/vistasProduct.js')
 const vistasSession=require('./routes/session.router.js')
 
-const PORT=3000
+const PORT=config.PORT
 
 const app =express()
 
@@ -26,15 +28,15 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(sessions(
     {
-        secret:"ArielBasualdo",
+        secret:config.SECRET,
         resave:true,saveUninitialized:true,
         cookie:{
             expires:600000
         },
         store:mongoStore.create(
             {
-                mongoUrl:'mongodb+srv://ArielBasualdo:SkHlBzll3xkLec6u@practicabackend.ezsytku.mongodb.net/?retryWrites=true&w=majority',
-                mongoOptions:{dbName:'ecommerce'},
+                mongoUrl:config.MONGO_URL,
+                mongoOptions:{dbName:config.DB_NAME},
                 ttl:3600,
                 autoRemove:'native'
             }
@@ -68,8 +70,8 @@ serverSokcet.on("connection",socket=>{
 
 
 try {
-     mongoose.connect('mongodb+srv://ArielBasualdo:SkHlBzll3xkLec6u@practicabackend.ezsytku.mongodb.net/?retryWrites=true&w=majority',{dbName:'ecommerce'})
-    console.log('DB ONLINE')
+     mongoose.connect(config.MONGO_URL,{dbName:config.DB_NAME})
+    console.log('DB ONLINE: '+config.DB_NAME)
 } catch (error) {
     console.log(error.message)
 }
