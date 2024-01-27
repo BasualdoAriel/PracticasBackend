@@ -3,7 +3,7 @@ const local=require('passport-local')
 const github=require('passport-github2')
 const usersModel = require('../dao/models/user.model.js')
 const crypto=require('../crypto.js')
-
+const configGitHub=require('./config.js')
 
 const initPassport=()=>{
     passport.use('register',new local.Strategy( //Registro de usuario
@@ -18,7 +18,6 @@ const initPassport=()=>{
                     return done(null, false)
                 }
                 let regMail=/^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/
-                console.log(regMail.test(email))
                 if(!regMail.test(email)){
                     return done(null, false)
                 }
@@ -50,8 +49,6 @@ const initPassport=()=>{
                     return done(null, false)
                 }
                 let user=await usersModel.findOne({email:username}).lean()//busco si existe el usuario
-                console.log('User passport:')
-                console.log(user)
                 if(!user){//si no existe, solicito nuevamene datos.
                     return done(null, false)
                 }
@@ -59,7 +56,6 @@ const initPassport=()=>{
                     return done(null, false)
                 }
                 delete user.password
-                console.log(user)
                 return done(null, user)
             } catch (error) {
                 return done(error, null)
@@ -69,9 +65,9 @@ const initPassport=()=>{
     
     passport.use('github', new github.Strategy(//registro e inicio de sesión con github
         {
-            clientID:'Iv1.7ae6a07789335af4',
-            clientSecret:'04f0efd87cef5017eb557b490d65e83d8dabb6b5',
-            callbackURL:'http://localhost:3000/sessions/callbackGithub'
+            clientID:configGitHub.CLIENT_ID,
+            clientSecret:configGitHub.CLIENT_SECRET,
+            callbackURL:configGitHub.CALLBACK_URL
         },
         async(accessToken,refreshToken,profile,done)=>{
             try {
