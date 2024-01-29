@@ -1,5 +1,4 @@
-//const fs=require('fs')
-const cartModel=require('../models/carts.model.js')
+const cartModel=require('../dao/models/carts.model.js')
 class CartManager{
 
     constructor(path){
@@ -7,7 +6,7 @@ class CartManager{
         this.id=0
     }
 
-    async getCarts(){
+    static async getCarts(){
         let carts=[]
         try {
             carts=await cartModel.find({}).populate('products.product')
@@ -19,7 +18,7 @@ class CartManager{
     }
 
 
-    async getCartById(id){
+    static async getCartById(id){
         let cart=await cartModel.find({id:id}).populate('products.product')
         if(!cart){
             console.error('No exiset carrito con id')
@@ -28,7 +27,7 @@ class CartManager{
         return cart
     }
 
-    async addCart(products){
+    static async addCart(products){
         let id= await cartModel.find().sort({$natural:-1}).limit(1).lean()
         id=id[0].id+1
         cartModel.insert
@@ -40,7 +39,7 @@ class CartManager{
         //await productModel.create(product.product)
     }
 
-    async addProductToCart(productP,id){
+    static async addProductToCart(productP,id){
         //recibo _id del producto. y el id del carrito.
 
         let cart=await this.getCartById(id)
