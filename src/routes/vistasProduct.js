@@ -13,6 +13,7 @@ const getCarts=require('./carts/getCarts.js')
 const getCartById=require('./carts/getCartById.js')
 const addCart=require('./carts/addCart.js')
 const addProductToCart=require('./products/addProductToCart.js')
+const purchase= require('./carts/purchase.js')
 
 const auth=(req,res,next)=>{
     if(!req.session.user){
@@ -27,6 +28,8 @@ const auth2=(req,res,next)=>{
     }
     next()
 }
+
+router.get('/',auth,ProductController.homePageProducs)
 
 router.get('/home',auth,ProductController.homePageProducs ) 
 
@@ -51,5 +54,6 @@ router.use('/carts',getCarts)
 router.use('/carts',getCartById)
 router.use('/carts',addCart)
 router.use('/carts',addProductToCart)
+router.use('/carts',purchase)
 
 module.exports=router

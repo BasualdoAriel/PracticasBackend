@@ -1,24 +1,40 @@
 const CartManager=require('../services/cartManager.service.js')
 const cartModel=require('../dao/models/carts.model.js')
+const ticketModel=require('../dao/models/ticket.model.js')
+const ticketManager=require('../services/ticket.service.js')
+const productManager=require('../services/productManager.service.js')
+const mailing=require('../mailer.js')
 
 class CartController{
     constructor(){}
 
     static async getCarts(req,res){
-        let carts=await CartManager.getCarts()
-        res.setHeader('Content-Type','application/json')
-        res.status(200).json({carts})
+        let role=req.session.user.role
+        if(role==='admin'){
+            let carts=await CartManager.getCarts()
+            res.setHeader('Content-Type','application/json')
+            res.status(200).json({carts})
+        }else{
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
+        }
     }
 
     static async getCartById(req,res){
-        let id=parseInt(req.params.id)
-        let cart=await CartManager.getCartById(id)
-        if(cart.length===0){
+        let role=req.session.user.role
+        if(role==='admin'){
+            let id=parseInt(req.params.id)
+            let cart=await CartManager.getCartById(id)
+            if(cart.length===0){
+                res.setHeader('Content-Type','application/json')
+                return res.status(404).json({error:`No existe cart con id ${id}`})
+            }
             res.setHeader('Content-Type','application/json')
-            return res.status(404).json({error:`No existe cart con id ${id}`})
+            res.status(200).json(cart)
+        }else{
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
         }
-        res.setHeader('Content-Type','application/json')
-        res.status(200).json(cart)
     }
     static async addCart(req,res){
         let products=req.body
@@ -30,13 +46,11 @@ class CartController{
     }
 
     static async addProductToCart(req,res){
-        console.log('enro');
         let pId=parseInt(req.params.pId)
         let cId=parseInt(req.params.cId)
         let product= await productManager.getProductById(pId)
-        let exist= await CartManager.getCartById(cId)
-        
-        if(exist===undefined || Object.keys(product).length===0){
+        let exist= await CartManager.getCartById(cId)        
+        if(exist===undefined || Object.keys(product).length===0 || product[0].stock<=0){
             res.setHeader('Content-Type','application/json')
             return res.status(400).json('errr')
         }
@@ -45,6 +59,39 @@ class CartController{
         res.setHeader('Content-Type','application/json')
         res.status(200).json(`Se actualizó el carrito.`)
     }
+
+    static async purchase(req,res){
+        let purchaser=req.session.user.email
+        let cId=parseInt(req.params.id)
+        let cart= await CartManager.getCartById(cId)
+         if(cart.length===0){
+             res.setHeader('Content-Type','application/json')
+             return res.status(400).json('errr')
+         }
+        let value=0
+        let productsOFS=[] //pructos fuera de stock
+        for(let product of cart[0].products){
+            if(product.product.stock<product.quantity){//si el stock es menor a la cantidad solicitada
+                    let productOfs={//guardo el _id del producto y la canidad.
+                        product:product.product._id,
+                        quantity:product.quantity
+                    }
+                    productsOFS.push(productOfs)//guardo el producto en el array.
+                    continue//sigo con el próximo.
+                }
+            let price=0
+            price=product.product.price*product.quantity
+            value=value+price
+        }
+        let ticket=await ticketManager.createTicket(value,purchaser)
+        console.log(ticket)
+        await ticketModel.create(ticket)
+        //update carrito
+        await CartManager.updateCart(productsOFS,cId)
+        //envio ticket por email.
+        mailing.send(ticket)
+    }
+
 }
 
 module.exports=CartController

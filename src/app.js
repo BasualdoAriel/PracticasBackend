@@ -2,7 +2,7 @@ const express=require('express')
 const path=require('path')
 const {engine}=require('express-handlebars')
 const {Server}=require('socket.io')
-const mongoose=require('mongoose')
+const DBMongoose=require('./connectDB.js')
 const chatManager=require('./services/managers/chatManager.js')
 const sessions=require('express-session')
 const mongoStore=require('connect-mongo')
@@ -31,7 +31,7 @@ app.use(sessions(
         secret:config.SECRET,
         resave:true,saveUninitialized:true,
         cookie:{
-            expires:600000
+            expires:800000
         },
         store:mongoStore.create(
             {
@@ -57,8 +57,6 @@ const server=app.listen(PORT,()=>{
 
 const serverSokcet=new Server(server)
 
-
-
 serverSokcet.on("connection",socket=>{
     console.log('Socket on, id: '+socket.id );
 
@@ -68,10 +66,8 @@ serverSokcet.on("connection",socket=>{
     })
 })
 
-
 try {
-     mongoose.connect(config.MONGO_URL,{dbName:config.DB_NAME})
-    console.log('DB ONLINE: '+config.DB_NAME)
+    DBMongoose.connectDB()
 } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
 }

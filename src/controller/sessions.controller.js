@@ -1,4 +1,5 @@
 const UserModel=require('../dao/models/user.model.js')
+const userDTO=require('../dao/userDTO.js')
 
 class SessionsController{
     constructor(){}
@@ -32,16 +33,17 @@ class SessionsController{
     }
 
     static current(req,res){
-        req.session.user={//creo el usuario 
-            first_name:req.user.first_name, last_name:req.user.last_name,email:req.user.email,age:req.user.age, role:req.user.role, cart:req.user.cart, role:req.user.role
-       }
-       let user=req.session.user
+       let user=new userDTO(req.session.user)
        res.setHeader('Content-Type','application/json')
        res.status(200).json({user})
     }
 
     static async users(req,res){
-        let users= await UserModel.find({}).populate('cart.carts')
+        if(req.session.user.role==='user'){
+            res.setHeader('Content-Type','application/json')
+            return res.status(401).json('No autorizado')
+        }
+        let users= await UserModel.find({}).populate('carts.cart')
         res.setHeader('Content-Type','application/json')
         res.status(200).json(users)
     }

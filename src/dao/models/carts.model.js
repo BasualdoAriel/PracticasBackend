@@ -4,7 +4,10 @@ const cartsCollection='carts'
 
 const cartEsquema=new mongoose.Schema(
     {
-        id:Number,
+        id:{
+            type:Number,
+            index:true
+        },
         products:{
             type:[
                 {

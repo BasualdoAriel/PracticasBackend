@@ -1,30 +1,21 @@
-const productModel=require('../dao/models/products.model.js')
+const daoProducts=require('../dao/daoProductManager.js')
 
 class ProductManager{
 
-    constructor(path){
-        this.id=0
-        this.path=path
-    }
+    constructor(){}
 
-    static async getProducts(){//Obtiene el array de productos, corrobora si existe y sino devuelve un array vacío para que se inicialice
-        let products=[]
-        try {
-            products=await productModel.find({})
-        } catch (error) {
-            console.log(error.message)
-        }
+    static async getProducts(){
+        return await daoProducts.getProducts()
     }
 
     static async getProductById(id){
-        let product
-        try {
-            product=await productModel.find({id:id})
-            return product
-        } catch (error) {
-            return {}
-        }
+        return await daoProducts.getProductById(id)
     }
+
+    static async addProductToCart(productP,id){
+        return await daoProducts.addProductToCart(productP,id)
+    }
+
 }
 
 module.exports=ProductManager

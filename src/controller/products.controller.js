@@ -39,9 +39,9 @@ class ProductController{
 
     static async getPrices(req,res){
         let products
-    let price
-    let available
-    if(req.query.price==1||req.query.price==-1){
+        let price
+        let available
+        if(req.query.price==1||req.query.price==-1){
         price=parseInt(req.query.price)
         if(req.query.available==undefined){
             products= await productModel.aggregate(
@@ -79,63 +79,94 @@ class ProductController{
     }
 
     static async getProducts(req,res){
-        
-        if(req.query.limit>0 && !isNaN(req.query.limit)){
-        let products= await productModel.find().limit(req.query.limit)
-        res.setHeader('Content-Type','application/json')
-        return res.status(200).json({filters:req.query,products})
-     }
-        let products= await productModel.find()
-        res.setHeader('Content-Type','application/json')
-        return res.status(200).json({filters:req.query,products})
+        let user=req.session.user
+        if(user.role==="admin"){
+            if(req.query.limit>0 && !isNaN(req.query.limit)){
+            let products= await productModel.find().limit(req.query.limit)
+            res.setHeader('Content-Type','application/json')
+            return res.status(200).json({filters:req.query,products})
+         }
+         let products= await productModel.find()
+         res.setHeader('Content-Type','application/json')
+         return res.status(200).json({filters:req.query,products})
+        }else{
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
+        }
     }
     
     static async getProductById(req,res){
-        let id=parseInt(req.params.id)
-        let product= await productManager.getProductById(id)//busco el producto con PM
-        if(Object.keys(product).length!==0){//Si el length es != 0 es porque el producto existe.
-        res.setHeader('Content-Type','application/json')
-        res.send(product)
+        let role=req.session.user.role
+        if(role==='admin'){
+            let id=parseInt(req.params.id)
+            let product= await productManager.getProdctById(id)//busco el producto con PM
+            if(Object.keys(product).length!==0){//Si el length es != 0 es porque el producto existe.
+            res.setHeader('Content-Type','application/json')
+            res.send(product)
+            }else{
+                res.send('No existe producto con ese id')
+            }
         }else{
-            res.send('No existe producto con ese id')
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
         }
     }
 
     static async addProduct(req,res){
-        let {title,description,code,price,status,stock,category,thumbnail}=req.body
-        let product= new Product()
-        await product.createProduct(title,description,code,price,status,stock,category,thumbnail)
-        let fields=Object.values(product.product)
-        if(fields.length===0 ||fields.includes(undefined) ){
-            return res.status(400).json(`no se pudo agregar el producto, el mismo no fue inicializado correctatmente.`)
+        let role=req.session.user.role
+        if(role==='admin'){
+            let {title,description,code,price,status,stock,category,thumbnail}=req.body
+            let product= new Product()
+            await product.createProduct(title,description,code,price,status,stock,category,thumbnail)
+            let fields=Object.values(product.product)
+            if(fields.length===0 ||fields.includes(undefined) ){
+                return res.status(400).json(`no se pudo agregar el producto, el mismo no fue inicializado correctatmente.`)
+            }
+            await productModel.create(product.product)
+            res.status(201).json(`Se agregó el producto ${product.product.title}`)
+        }else{
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
         }
-        await productModel.create(product.product)
-        res.status(201).json(`Se agregó el producto ${product.product.title}`)
     }
 
     static async deleteProduct(req,res){
-        let id=parseInt(req.params.id)
-        let product= await productModel.find({id:id})
-        if(product.length===0){//si es igual a 0 no existe prducto con ese id.        
+        let role=req.session.user.role
+        if(role==='admin'){
+            let id=parseInt(req.params.id)
+            let product= await productModel.find({id:id})
+            if(product.length===0){//si es igual a 0 no existe prducto con ese id.        
+                res.setHeader('Content-Type','applicattion/json')
+                return res.status(400).json({message:`id invalido: ${id}`})
+            }
+            await productModel.deleteOne({id:id})//Elimina el registro 
             res.setHeader('Content-Type','applicattion/json')
-            return res.status(400).json({message:`id invalido: ${id}`})
+            return res.status(200).json({message:'Eliminado.'})
+        }else{
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
         }
-        await productModel.deleteOne({id:id})//Elimina el registro 
-        res.setHeader('Content-Type','applicattion/json')
-        return res.status(200).json({message:'Eliminado.'})
     }
 
     static async updateProduct(req,res){
-        let id=parseInt(req.params.id)
-        let {title,description,code,price,status,stock,category,thumbnail}=req.body
-        let product= new Product()
-        product=await product.updateProduct(id,title,description,code,price,status,stock,category,thumbnail)
-        let fields=Object.values(product)
-        if(fields.length===0 ||fields.includes(undefined) ){
-            return res.status(400).json(`no se encuentra producto con id ${id}.`)
-        }else{
-            return res.status(201).json(`Se actualizó el producto ${title}`)
-        }
+//        let role=req.session.user.role
+        //if(role==='admin'){
+            let id=parseInt(req.params.id)
+            let {param, value}=req.body
+            let product= new Product()
+            product=await product.updateProduct(param, value,id)
+            if(product===0){//0 si el paramero no es valido
+                return res.status(400).json(`No se actualizó el producto, el parametro enviado no es válido.`)
+            }
+            if(product===-1 ){//-1 si no existe el producto
+                return res.status(400).json(`no se encuentra producto con id ${id}.`)
+            }else{
+                return res.status(201).json(`Se actualizó el producto con id ${id}`)
+            }
+        //}else{
+        //    res.setHeader('Content-Type','application/json')
+       //     res.status(401).json('No autorizado.')
+       // }
     }
 }
 
