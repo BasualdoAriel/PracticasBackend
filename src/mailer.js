@@ -1,12 +1,13 @@
 const nodemailer=require('nodemailer')
+const config=require('./config/config.js')
 
 const transport=nodemailer.createTransport(
     {
         service:'gmail',
         port:587,
         auth:{
-            user:'arielbasualdo37@gmail.com',
-            pass:'sqgapimbearxdjkh'
+            user:config.EMAIL,
+            pass:config.PASS
         }
     }
 )
@@ -15,8 +16,8 @@ const send=(ticket)=>{
     console.log(ticket)
     return transport.sendMail(
         {
-            from:'arielbasualdo37@gmail.com',
-            to:'arielbasualdo2014@outlook.com',
+            from:config.EMAIL,
+            to:config.EMAIL_TEST,
             subject:'test',
             html:`
                 <h3>Hola ${ticket.purchaser}!</h3>

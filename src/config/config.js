@@ -30,7 +30,10 @@ const configServer={
     MONGO_URL:process.env.MONGO_URL,
     CLIENT_ID:process.env.CLIENT_ID,
     CLIENT_SECRET:process.env.CLIENT_SECRET,
-    CALLBACK_URL:process.env.CALLBACK_URL
+    CALLBACK_URL:process.env.CALLBACK_URL,
+    PASS:process.env.PASS,
+    EMAIL:process.env.EMAIL,
+    EMAIL_TEST:process.env.EMAIL_TEST
 }
 
 module.exports=configServer
