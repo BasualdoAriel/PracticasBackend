@@ -14,7 +14,6 @@ class cartDao{
         return carts
     }
 
-
     static async getCartById(id){
         let cart=await cartModel.find({id:id}).populate('products.product')
         if(!cart){
@@ -35,7 +34,7 @@ class cartDao{
         return cart
     }
 
-    static async addProductToCart(productP,id){
+    static async addProductToCart(productP,id,quantity){
         //recibo _id del producto. y el id del carrito.
         console.log('productP: '+productP);
         let cart=await this.getCartById(id)
@@ -47,7 +46,7 @@ class cartDao{
                 //BUSCO EL PRODUCTO EN EL CARRITO Y SI EXISTE ACTUALIZO LA CANTIDAD                
                 if((product.product._id).toString()===productP){
                     product.product=productP
-                    product.quantity=product.quantity+1//sumo las cantidades
+                    product.quantity=product.quantity+quantity//sumo las cantidades
                     await cartModel.updateOne({id:id},{$set:{//actualizo el producto.
                     id:id,
                     products:productsOnCart
@@ -58,8 +57,9 @@ class cartDao{
             if(existe===-1){//Si no existe el producto en el carrito, lo agrego.
                 let newProduct={
                     product:productP,
-                    quantity:1
+                    quantity:quantity
                 }
+                console.log(newProduct)
                 productsOnCart.push(newProduct)
                 await cartModel.updateOne({id:id},{$set:{
                     id:id,
@@ -75,7 +75,6 @@ class cartDao{
                 return
             }    
     }
-
 
     static async updateCart(products,id){
         console.log(products)

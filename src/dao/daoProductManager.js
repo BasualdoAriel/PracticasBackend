@@ -22,10 +22,6 @@ class productManagerDao{
             return {}
         }
     }
-    
-    static async updateProduct(id){
-        
-    }
 }
 
 module.exports=productManagerDao

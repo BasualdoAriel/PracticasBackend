@@ -149,8 +149,8 @@ class ProductController{
     }
 
     static async updateProduct(req,res){
-//        let role=req.session.user.role
-        //if(role==='admin'){
+        let role=req.session.user.role
+        if(role==='admin'){
             let id=parseInt(req.params.id)
             let {param, value}=req.body
             let product= new Product()
@@ -163,10 +163,10 @@ class ProductController{
             }else{
                 return res.status(201).json(`Se actualizó el producto con id ${id}`)
             }
-        //}else{
-        //    res.setHeader('Content-Type','application/json')
-       //     res.status(401).json('No autorizado.')
-       // }
+        }else{
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
+        }
     }
 }
 

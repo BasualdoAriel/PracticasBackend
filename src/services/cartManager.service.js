@@ -16,8 +16,8 @@ class CartManager{
         return await daoCart.addCart(products)
     }
 
-    static async addProductToCart(productP,id){
-        return await daoCart.addProductToCart(productP,id)
+    static async addProductToCart(productP,id,quantity){
+        return await daoCart.addProductToCart(productP,id,quantity)
     }
 
     static async updateCart(products,id){

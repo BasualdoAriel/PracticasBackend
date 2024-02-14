@@ -2,6 +2,9 @@ const {Router}=require('express')
 const router=Router()
 const passport=require('passport')
 const SessionsController = require('../controller/sessions.controller.js')
+const errorHandler = require('../middlewares/errorHandler.js')
+
+router.use(errorHandler)
 
 const auth=(req,res,next)=>{
     if(!req.session.user){

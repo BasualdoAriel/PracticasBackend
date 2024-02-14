@@ -15,10 +15,12 @@ const config=require('./config/config.js')
 //VISTAS
 const vistasProduct=require('./routes/vistasProduct.js')
 const vistasSession=require('./routes/session.router.js')
+const errorHandler = require('./middlewares/errorHandler.js')
 
 const PORT=config.PORT
 
 const app =express()
+
 
 app.use(express.static('./public'))
 app.engine('handlebars',engine())
@@ -43,12 +45,14 @@ app.use(sessions(
         )
     }
 ))
+
 initPassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
 app.use('/',vistasProduct)
 app.use('/sessions',vistasSession)
+
 
 
 const server=app.listen(PORT,()=>{
