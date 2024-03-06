@@ -21,7 +21,11 @@ const productsEsquema=new mongoose.Schema(
             type:String,
             index:true
         },
-        thumbnail: String
+        thumbnail: String,
+        owner:{
+            type:String,
+            default:'admin'
+        }
     },
     {
         timestamps:true

@@ -1,5 +1,6 @@
 const UserModel=require('../dao/models/user.model.js')
 const userDTO=require('../dao/userDTO.js')
+const userService=require('../services/user.service.js')
 
 class SessionsController{
     constructor(){}
@@ -47,6 +48,42 @@ class SessionsController{
         res.setHeader('Content-Type','application/json')
         res.status(200).json(users)
     }
+
+    static async premium(req,res){
+        let user=req.session.user
+        if(user.role==='admin'){            
+            res.setHeader('Content-Type','application/json')
+            res.status(400).json('User no actualizado, el rol asignado no es válido.')
+        }
+        await userService.getPremium(user.email, user.role)
+        res.setHeader('Content-Type','application/json')
+        res.status(200).json({user})
+    }
+
+    static async sendRecovery(req,res){
+        let {email}=req.body
+        //esty dentr de dnde coloco el mail
+        let response=await userService.sendRecovery(email)
+        if(response===-1){
+            res.setHeader('Content-Type','application/json')
+            return res.status(400).json('No fue posible enviar el recupero de clave')
+        }
+        res.setHeader('Content-Type','application/json')
+        res.status(200).json('Email enviado')
+
+    }
+
+    static async recovery(req,res){
+        // let {email}=req.body
+        // //esty dentr de dnde coloco el mail
+        // let user=await UserModel.findOne({email:email})
+        // if(!user){
+        //     res.setHeader('Content-Type','application/json');
+        //     return res.status(400).json({error:`No existe el email ${email}`})
+        // }
+
+    }
+
 }
 
 

@@ -114,10 +114,14 @@ class ProductController{
 
     static async addProduct(req,res){
         let role=req.session.user.role
-        if(role==='admin'){
+        if(role==='admin'||role==='premium'){
             let {title,description,code,price,status,stock,category,thumbnail}=req.body
+            let owner='admin'
+            if(role==='premium'){
+                owner=req.session.user.email
+            } 
             let product= new Product()
-            await product.createProduct(title,description,code,price,status,stock,category,thumbnail)
+            await product.createProduct(title,description,code,price,status,stock,category,thumbnail,owner)
             let fields=Object.values(product.product)
             if(fields.length===0 ||fields.includes(undefined) ){
                 return res.status(400).json(`no se pudo agregar el producto, el mismo no fue inicializado correctatmente.`)
@@ -132,14 +136,19 @@ class ProductController{
 
     static async deleteProduct(req,res){
         let role=req.session.user.role
-        if(role==='admin'){
+        if(role==='admin' || role==='premium'){
             let id=parseInt(req.params.id)
             let product= await productModel.find({id:id})
             if(product.length===0){//si es igual a 0 no existe prducto con ese id.        
                 res.setHeader('Content-Type','applicattion/json')
                 return res.status(400).json({message:`id invalido: ${id}`})
             }
-            await productModel.deleteOne({id:id})//Elimina el registro 
+            if(role==='premium'&& product.owner===req.session.user.email){
+                await productModel.deleteOne({id:id})//Elimina el registro 
+            }else{
+                res.setHeader('Content-Type','application/json')
+                return res.status(401).json('Solo podés eliminar productos de tu propiedad.')
+            }
             res.setHeader('Content-Type','applicattion/json')
             return res.status(200).json({message:'Eliminado.'})
         }else{

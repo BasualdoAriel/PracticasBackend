@@ -29,4 +29,17 @@ const send=(ticket)=>{
     )
 }
 
-module.exports={send}
+const recovery=(message)=>{
+    console.log('ingres recuper');
+
+    return transport.sendMail(
+        {
+            from:config.EMAIL,
+            to:config.EMAIL_TEST,
+            subject:'test',
+            html:`${message}`
+        }
+    )
+}
+
+module.exports={send,recovery}

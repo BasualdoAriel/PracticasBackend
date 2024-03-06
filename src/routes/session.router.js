@@ -39,4 +39,25 @@ router.get('/current',auth, SessionsController.current)
 
 router.get('/users', SessionsController.users)
 
+router.post('/sendRecovery',SessionsController.sendRecovery)
+
+router.get('/recovery',(req,res)=>{
+    res.status(200).render('sendRecovery')
+})
+
+router.get('/recovreyAccepeted',(req,res)=>{
+    let {token}=req.query
+
+    try {
+        let verifyToken=jwt.verify(token,'secretKey')
+        res.redirect(`htpp://localhost:3000/recoveryAccepeted?token="${token}"`)
+    } catch (error) {
+        console.log(error)
+        res.redirect('/home')
+    }
+})
+
+router.get('/premium/:uid', auth, SessionsController.premium)
+
+
 module.exports=router
