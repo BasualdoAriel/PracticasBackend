@@ -20,17 +20,17 @@ class userDao{
     static async sendRecovery(email){
         console.log(email)
         let user= userModel.findOne({email:email}).lean()
-        console.log('USER');
-        console.log(user);
+        //console.log('USER');
+        //console.log(user);
         if(!user){
             console.log('no encontrado');
             return -1
         }
         delete user.password
-        console.log('holaA');
+        //console.log('holaA');
         let token=jwt.sign({...user.email},'secretKey',{expiresIn:'1h'})
 
-        console.log('hola');
+        //console.log('hola');
         let message=`Se solicito el reseteo de clave para tu usario
         Haga click en el sigiente enlace para recuperar la clave: <a href="http://localhost:3000/sessions/recovery?token=${token}">RECOVERY</a>`
 

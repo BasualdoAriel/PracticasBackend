@@ -8,6 +8,9 @@ const sessions=require('express-session')
 const mongoStore=require('connect-mongo')
 const initPassport=require('./config/config.passport.js')
 const passport=require('passport')
+const swaggerJsdoc=require('swagger-jsdoc')
+const swaggerUi=require('swagger-ui-express')
+
 
 //Config de servidor
 const config=require('./config/config.js')
@@ -49,6 +52,21 @@ app.use(sessions(
 initPassport()
 app.use(passport.initialize())
 app.use(passport.session())
+
+const options={
+    definition:{
+        openapi:"3.0.0",
+        info:{
+            title:"Api",
+            version:"1.0",
+            descrition:"Documentación proyecto final"
+        }
+    },
+    apis:["./docs/*/*.yaml"]
+}
+
+const specs=swaggerJsdoc(options)
+app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(specs))
 
 app.use('/',vistasProduct)
 app.use('/sessions',vistasSession)

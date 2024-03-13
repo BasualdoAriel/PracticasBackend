@@ -1,0 +1,51 @@
+paths:
+  /carts/:
+    get:
+      summary: Obtiene los carritos de la DB.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Muesttra los carritos en DB
+        "401":
+          description: Usuario no autorizado
+    post:
+      summary: Crea el carrito con productos.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Se agregar el carrito a BD.
+
+  /carts/{cId}:
+    get:
+      summary: Devuelve el carrito del ID
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Devuelve el carrito del id
+        "401":
+          description: Usuario no autorizado
+        "404":
+          description: Carrito no enconrtado.
+
+  /carts/{cId}/product/{pId}:
+    post:
+      summary: Agrega un producto al carrito
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Agrega el producto al carrito del id.
+        "400":
+          description: El carrito no existe o el producto no existe.
+      
+  /carts/{cId}/purchase:
+    get:
+      summary: Compra del carrito del id.
+      tags:
+        - Carts
+      response:
+        "400":
+          desciption: No existe el carrito

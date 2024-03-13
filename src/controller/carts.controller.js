@@ -25,8 +25,8 @@ class CartController{
                 code:errors.ERRORES_INTERNOS.PERMISOS,
                 description:Errors.noAutorizado()
             })
-           // res.setHeader('Content-Type','application/json')
-            //res.status(401).json('No autorizado.')
+            res.setHeader('Content-Type','application/json')
+            res.status(401).json('No autorizado.')
             //throw CustomError.CustomError('No autorizado','Usuario no aturoizado para ingrsear al sitio',errors.STATUS_CODES.ERROR_AUTH,errors.ERRORES_INTERNOS.PERMISOS,Errors.noAutorizado())
         }else{
             let role=req.session.user.role
@@ -91,7 +91,7 @@ class CartController{
         let value=0
         let productsOFS=[] //pructos fuera de stock
         for(let product of cart[0].products){
-            console.log(product.product)
+            //console.log(product.product)
             if(product.product.stock<product.quantity){//si el stock es menor a la cantidad solicitada
                     let productOfs={//guardo el _id del producto y la canidad.
                         product:product.product._id,
@@ -108,7 +108,7 @@ class CartController{
         }
         //FALTA ACTUALIZAR STOCK
         let ticket=await ticketManager.createTicket(value,purchaser)
-        console.log(ticket)
+        //console.log(ticket)
         await ticketModel.create(ticket)
         //update carrito
         await CartManager.updateCart(productsOFS,cId)

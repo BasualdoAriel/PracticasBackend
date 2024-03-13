@@ -19,7 +19,7 @@ if(!allowedModes.includes(opts.mode.toLowerCase())){
 }
 
 
-const envPath=path.join(__dirname,'../.env')
+const envPath=path.join(__dirname,'../../.env')
 
 dotenv.config({path:envPath})
 

@@ -1,0 +1,108 @@
+paths:
+  /products/:
+    get:
+      summary: Devuelve todos los productos registrados.
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Muesra los productos registrados
+        "401":
+          description: El usuario no tiene permiso a visualizar la información.
+    post:
+      summary: Se agrega prducto a la BD
+      tags:
+        - Products
+      responses:
+        "201":
+          description: Se agrega el producto a la BD
+        "400":
+          description: El producto a agregar no fue inicializado correctamene.
+        "401":
+          description: El usuari no tiene permis a agregar productos.
+
+  /products/{pId}:
+    get:
+      summary: Devuelve el producto del id recibido.
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Devuelve el prduct con id
+        "401":
+          description: Usuario no autorizado
+        "404":
+          description: Producto no encontrado.
+    delete:
+      summary: Elimina el produco del id recibido
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Producto eliminado de BD
+        "401":
+          description: Usuario no autorizado
+        "404":
+          description: Producto no enconrtado.
+    put:
+      summary: Modifica producto en BD
+      tags:
+        - Products
+      responses:
+        "201":
+          description: Producto acualizado de BD
+        "400":
+          description: Producoto no acualizado
+        "401":
+          description: Usuario no autoriazo
+        "404":
+          description: Producto no encontrado
+
+    parameters:
+    - name: Product ID
+    - in: path
+    - required: true
+  
+
+  /:
+    get:
+      summary: redirige al sitio /home
+      tags:
+        - Products
+
+  /home:
+    get:
+      summary: Si está logueado, muestra los productos disponibles. puede filar por categoria
+      tags:
+        - Products
+      respones:
+        "200":
+          description: Rederiza el home del sitio y muestra los productos. el usuario debe estar logueado.
+        "400":
+          description: No fue posible obtener los productos.
+  
+  /prices:
+    get:
+      summary: listado de productos por precio y disponibildiad
+      tags:
+        - Products
+      respones:
+        "200":
+          description: Renderiza el sitio y muestra en orden (ascendente o descendente) los productos
+        "400":
+          description: las querys enviadas no son correctas.
+
+  /mockingproducts:
+    get:
+      summary: devuelve un json con 100 productos generados aleatoreamente
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Muesrta los productos en pantalla.
+
+  /chat:
+    get:
+      summary: Abre el chat de la plataforma.
+      tags:
+        - Misc 

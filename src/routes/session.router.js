@@ -45,7 +45,7 @@ router.get('/recovery',(req,res)=>{
     res.status(200).render('sendRecovery')
 })
 
-router.get('/recovreyAccepeted',(req,res)=>{
+router.get('/recovreyAccepted',(req,res)=>{
     let {token}=req.query
 
     try {

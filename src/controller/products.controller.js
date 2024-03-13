@@ -99,12 +99,12 @@ class ProductController{
         let role=req.session.user.role
         if(role==='admin'){
             let id=parseInt(req.params.id)
-            let product= await productManager.getProdctById(id)//busco el producto con PM
+            let product= await productManager.getProductById(id)//busco el producto con PM
             if(Object.keys(product).length!==0){//Si el length es != 0 es porque el producto existe.
             res.setHeader('Content-Type','application/json')
-            res.send(product)
+            res.status(200).send(product)
             }else{
-                res.send('No existe producto con ese id')
+                res.status(404).send('No existe producto con ese id')
             }
         }else{
             res.setHeader('Content-Type','application/json')
@@ -141,7 +141,7 @@ class ProductController{
             let product= await productModel.find({id:id})
             if(product.length===0){//si es igual a 0 no existe prducto con ese id.        
                 res.setHeader('Content-Type','applicattion/json')
-                return res.status(400).json({message:`id invalido: ${id}`})
+                return res.status(404).json({message:`id invalido: ${id}`})
             }
             if(role==='premium'&& product.owner===req.session.user.email){
                 await productModel.deleteOne({id:id})//Elimina el registro 
@@ -168,7 +168,7 @@ class ProductController{
                 return res.status(400).json(`No se actualizó el producto, el parametro enviado no es válido.`)
             }
             if(product===-1 ){//-1 si no existe el producto
-                return res.status(400).json(`no se encuentra producto con id ${id}.`)
+                return res.status(404).json(`no se encuentra producto con id ${id}.`)
             }else{
                 return res.status(201).json(`Se actualizó el producto con id ${id}`)
             }
